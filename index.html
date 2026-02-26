@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>The Golden Feather · luxury dashboard + CRM + FESTIVE + SUBSCRIPTION ADMIN + ASSURANCE + VILLAGE EXPANSION + STOCK SALE + MARKETING COMMAND CENTER + BUSINESS BLUEPRINT</title>
+  <title>The Golden Feather · luxury dashboard + CRM + FESTIVE + SUBSCRIPTION ADMIN + ASSURANCE</title>
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -526,7 +526,7 @@
       gap: 8px;
     }
 
-    /* modal overlay (unchanged) */
+    /* modal overlay (unchanged, but we removed the unused ones) */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -566,11 +566,66 @@
     .platform-badge { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
     .chart-canvas { width: 100%; height: 80px; margin: 8px 0; }
     .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+
+    /* ---------- ACCORDION STYLES ---------- */
+    .accordion-item {
+      margin-bottom: 8px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(20,20,20,0.7);
+    }
+    .accordion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      background: rgba(30,30,30,0.9);
+      transition: background 0.15s;
+    }
+    .accordion-header:hover {
+      background: rgba(50,50,50,0.9);
+    }
+    .accordion-header .arrow {
+      transition: transform 0.2s ease;
+      color: #d4af37;
+      font-size: 1.1rem;
+    }
+    .accordion-header.expanded .arrow {
+      transform: rotate(90deg);
+    }
+    .accordion-body {
+      display: none;
+      padding: 16px;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      background: rgba(15,15,15,0.8);
+    }
+    .accordion-body.expanded {
+      display: block;
+    }
+    /* summary metrics inside collapsed header */
+    .accordion-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+    .accordion-summary span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .accordion-summary .badge {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+    }
   </style>
 </head>
 <body>
 <div id="app">
-  <!-- header with three‑dots panel (now includes Marketing Command Center and Business Blueprint) -->
+  <!-- header with three‑dots panel (removed Village Expansion, Stock Sale, Marketing, Business Blueprint) -->
   <div class="header">
     <div class="header-left">
       <h1>
@@ -590,16 +645,11 @@
       <div class="more-item" data-tab="festive"><i class="fas fa-people-group"></i> <span>Community</span></div>
       <div class="more-item" data-tab="subscription"><i class="fas fa-calendar-check"></i> <span>Subscription</span></div>
       <div class="more-item" data-tab="assurance"><i class="fas fa-shield-alt"></i> <span>Assurance</span></div>
-      <div class="more-item" data-tab="villageExpansion"><i class="fas fa-handshake"></i> <span>Village Expansion</span></div>
-      <div class="more-item" data-tab="stockSale"><i class="fas fa-chart-line"></i> <span>Stock Sale</span></div>
-      <!-- Marketing Command Center -->
-      <div class="more-item" data-tab="marketing"><i class="fas fa-bullhorn"></i> <span>Marketing Command Center</span></div>
-      <!-- NEW: Business Blueprint (links to separate page) -->
-      <div class="more-item" data-href="blueprint.html"><i class="fas fa-book"></i> <span>Business Blueprint</span></div>
+      <!-- Removed: Village Expansion, Stock Sale, Marketing Command Center, Business Blueprint -->
     </div>
   </div>
 
-  <!-- main content area – all panes (including marketingPane) -->
+  <!-- main content area – all panes (removed villageExpansionPane, stockSalePane, marketingPane) -->
   <div class="main-content" id="mainContent">
     <!-- DASHBOARD PANE (original full content) -->
     <div class="tab-pane active" id="dashboardPane">
@@ -1118,7 +1168,7 @@
       </div>
     </div>
 
-    <!-- FESTIVE PANE (original full content) -->
+    <!-- ========== FESTIVE PANE (with accordion village groups) ========== -->
     <div class="tab-pane" id="festivePane">
       <!-- Village overview stats -->
       <div class="card">
@@ -1147,11 +1197,11 @@
         <p class="badge" style="margin-top:12px;"><i class="fas fa-arrow-up"></i> expected fulfillment: 92% (2,150 chickens)</p>
       </div>
 
-      <!-- Village groups list with admin controls -->
+      <!-- Village groups list with admin controls (ACCORDION) -->
       <div class="card">
         <div class="card-title"><i class="fas fa-list gold-text"></i> village groups · live slots</div>
-        <div id="villageListContainer">
-          <!-- dynamic village rows will be inserted here -->
+        <div id="villageListContainer" class="accordion-container">
+          <!-- dynamically filled with accordion items -->
         </div>
         <button class="btn-gold" style="width:100%; margin-top:12px;" id="addVillageBtn"><i class="fas fa-plus"></i> add village group</button>
       </div>
@@ -1173,7 +1223,7 @@
       </div>
     </div>
 
-    <!-- SUBSCRIPTION PANE (original full content) -->
+    <!-- ========== SUBSCRIPTION PANE (with accordion members & events) ========== -->
     <div class="tab-pane" id="subscriptionPane">
       <!-- Analytics dashboard -->
       <div class="card">
@@ -1206,11 +1256,11 @@
         <div class="cost-item"><span>🥩 holiday allocation total</span> <span>430 chickens</span></div>
       </div>
 
-      <!-- Member list with admin actions -->
+      <!-- Member list with admin actions (ACCORDION) -->
       <div class="card">
         <div class="card-title"><i class="fas fa-users gold-text"></i> members · <span class="filter-row" style="display:inline-flex; margin-left:8px;"><span class="filter-chip active" data-tier="all">all</span><span class="filter-chip" data-tier="steady">steady</span><span class="filter-chip" data-tier="celeb">celeb</span><span class="filter-chip" data-tier="sig">sig</span></span></div>
-        <div id="subscriptionMembersList">
-          <!-- dynamic rows -->
+        <div id="subscriptionMembersList" class="accordion-container">
+          <!-- dynamic accordion items for members -->
         </div>
         <button class="btn-gold" style="width:100%; margin-top:12px;" id="addTestMember"><i class="fas fa-user-plus"></i> add test member</button>
       </div>
@@ -1226,11 +1276,33 @@
         <button class="btn-small" id="applySubSettings">apply to all</button>
       </div>
 
-      <!-- Event reservations & balances -->
+      <!-- Event reservations & balances (ACCORDION) -->
       <div class="card">
         <div class="card-title"><i class="fas fa-calendar-alt gold-text"></i> upcoming events & reservations</div>
-        <div class="batch-row"><span>Easter weekend</span> <span>🐔 120 chickens · R 14,400</span> <span class="badge">deposit 30%</span></div>
-        <div class="batch-row"><span>Farmers' market (May)</span> <span>🐔 65 chickens · R 7,475</span> <span class="badge">paid 50%</span></div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span><strong>Easter weekend</strong> <span class="badge">120 chickens</span></span>
+            <i class="fas fa-chevron-right arrow"></i>
+          </div>
+          <div class="accordion-body">
+            <div class="batch-row"><span>Subscriber allocations</span> <span>🐔 120 chickens · R 14,400</span> <span class="badge">deposit 30%</span></div>
+            <div class="batch-row"><span>Deposits collected</span> <span>R 4,320</span></div>
+            <div class="batch-row"><span>Fulfillment status</span> <span>75% confirmed</span></div>
+            <div class="flex-row"><button class="btn-small">manage allocations</button></div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span><strong>Farmers' market (May)</strong> <span class="badge">65 chickens</span></span>
+            <i class="fas fa-chevron-right arrow"></i>
+          </div>
+          <div class="accordion-body">
+            <div class="batch-row"><span>Subscriber allocations</span> <span>🐔 65 chickens · R 7,475</span> <span class="badge">paid 50%</span></div>
+            <div class="batch-row"><span>Deposits collected</span> <span>R 3,737.50</span></div>
+            <div class="batch-row"><span>Fulfillment status</span> <span>50% confirmed</span></div>
+            <div class="flex-row"><button class="btn-small">manage allocations</button></div>
+          </div>
+        </div>
         <div class="cost-item"><span>💰 outstanding balances</span> <span class="gold-text" id="outstandingBalance">R 8,925</span></div>
       </div>
 
@@ -1243,7 +1315,7 @@
       </div>
     </div>
 
-    <!-- ASSURANCE PANE (original full content) -->
+    <!-- ========== ASSURANCE PANE (with accordion members) ========== -->
     <div class="tab-pane" id="assurancePane">
       <!-- Analytics dashboard -->
       <div class="card">
@@ -1259,7 +1331,7 @@
         <div class="cost-item"><span>✅ total allocations (chickens)</span> <span id="assuranceAllocations">340</span></div>
       </div>
 
-      <!-- Members list with filters & admin actions -->
+      <!-- Members list with filters & admin actions (ACCORDION) -->
       <div class="card">
         <div class="card-title"><i class="fas fa-users gold-text"></i> assurance members · 
           <span class="filter-row" style="display:inline-flex; margin-left:8px;">
@@ -1268,8 +1340,8 @@
             <span class="filter-chip" data-assurance-filter="pending">pending</span>
           </span>
         </div>
-        <div id="assuranceMembersList">
-          <!-- dynamic rows injected via JS -->
+        <div id="assuranceMembersList" class="accordion-container">
+          <!-- dynamic accordion items -->
         </div>
         <div class="flex-row" style="margin-top:12px;">
           <input type="text" placeholder="search member..." style="flex:1; background:#2a2a2a; border:1px solid #d4af3740; border-radius:30px; padding:8px 12px; color:white;">
@@ -1324,228 +1396,7 @@
         </div>
       </div>
     </div>
-
-    <!-- VILLAGE EXPANSION PANE (original full content) -->
-    <div class="tab-pane" id="villageExpansionPane">
-      <!-- Analytics & summary cards -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-chart-pie gold-text"></i> village expansion · overview</div>
-        <div class="grid-2">
-          <div class="stat"><span class="stat-label">active villages</span><div class="stat-value" id="villageCount">5</div></div>
-          <div class="stat"><span class="stat-label">total chickens</span><div class="stat-value" id="totalChickensVillage">3,450</div><span class="stat-sub">supplied/month</span></div>
-          <div class="stat"><span class="stat-label">expected profit</span><div class="stat-value" id="expectedProfitVillage">R 82,500</div></div>
-          <div class="stat"><span class="stat-label">expiring soon</span><div class="stat-value" id="expiringContracts">2</div><span class="stat-sub">in 30d</span></div>
-        </div>
-      </div>
-
-      <!-- Contracts list with admin actions -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-file-signature gold-text"></i> active contracts · <span class="btn-small" id="openAddContractModal"><i class="fas fa-plus"></i> new</span></div>
-        <div id="contractsListContainer">
-          <!-- dynamic contract rows injected by JS -->
-        </div>
-      </div>
-
-      <!-- Budget tracker for village expansion -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-coins gold-text"></i> expansion budget (monthly)</div>
-        <div class="cost-input"><label>🚚 travel/logistics</label> <input type="number" id="budgetTravel" value="5000" step="500"></div>
-        <div class="cost-input"><label>📄 contract management</label> <input type="number" id="budgetMgmt" value="2500" step="200"></div>
-        <div class="cost-input"><label>🔧 supply/infrastructure</label> <input type="number" id="budgetSupply" value="8000" step="1000"></div>
-        <hr>
-        <div class="cost-item"><span>📊 total allocated</span> <span class="gold-text" id="totalBudget">R 15,500</span></div>
-        <div class="cost-item"><span>📈 projected monthly supply</span> <span id="projectedSupply">3,450 chickens</span></div>
-        <div class="cost-item"><span>🧾 cost per chicken</span> <span id="costPerChickenVillage">R 4.49</span></div>
-        <div class="chart-bar"><div class="bar-fill" id="budgetBar" style="width:65%"></div></div>
-        <p class="helper-text">based on active contracts & subscription demand</p>
-      </div>
-
-      <!-- Integration with customer site / delivery assignment -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-link gold-text"></i> sync with customer site</div>
-        <div class="batch-row"><span>🌍 farms can view earnings</span><span class="badge">active link</span></div>
-        <div class="batch-row"><span>📦 pending deliveries to assign</span><span class="badge" id="pendingDeliveries">3</span></div>
-        <button class="btn-small" id="syncDeliveriesBtn"><i class="fas fa-sync-alt"></i> sync from subscriptions</button>
-        <button class="btn-small" id="generateFarmLinkBtn"><i class="fas fa-link"></i> generate farm access</button>
-        <div id="tempFarmLink" class="signature-link" style="display:none;">https://farm.goldenfeather.com/join?token=abc123</div>
-      </div>
-
-      <!-- Expiring contracts alert & transport fee collection -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-exclamation-triangle gold-text"></i> alerts & fees</div>
-        <div id="expiringAlerts" class="badge alert-badge" style="margin-bottom:8px;">⚠️ 2 contracts expire in May</div>
-        <div class="cost-item"><span>🚛 transport fees collected</span> <span id="transportFees">R 2,400</span></div>
-        <div class="cost-item"><span>📆 next renewal batch</span> <span>15 May 2025</span></div>
-      </div>
-
-      <!-- Simple chart: supply per village (bar) -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-chart-bar gold-text"></i> chickens supplied per village</div>
-        <div id="villageChart" style="display:flex; gap:4px; align-items:flex-end; height:80px;">
-          <!-- dynamic bars -->
-        </div>
-        <div class="flex-row" style="justify-content:space-between; margin-top:6px;" id="villageLabels"></div>
-      </div>
-    </div>
-
-    <!-- STOCK SALE PANE (original full content) -->
-    <div class="tab-pane" id="stockSalePane">
-      <!-- Analytics dashboard -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-chart-line gold-text"></i> stock sale program · overview</div>
-        <div class="grid-2">
-          <div class="stat"><span class="stat-label">active offerings</span><div class="stat-value" id="activeOfferings">3</div></div>
-          <div class="stat"><span class="stat-label">total shares sold</span><div class="stat-value" id="sharesSold">1,250</div></div>
-          <div class="stat"><span class="stat-label">capital raised</span><div class="stat-value" id="capitalRaised">R 87,500</div></div>
-          <div class="stat"><span class="stat-label">expected dividend</span><div class="stat-value" id="expectedDividend">R 13,125</div></div>
-        </div>
-        <hr>
-        <div class="cost-item"><span>📊 avg share price</span> <span class="gold-text" id="avgSharePrice">R 70.00</span></div>
-        <div class="cost-item"><span>📈 projected ROI (6m)</span> <span class="green-text" id="projectedROI">15%</span></div>
-      </div>
-
-      <!-- List of stock offerings with admin controls -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-list gold-text"></i> current offerings · <span class="btn-small" id="addOfferingBtn"><i class="fas fa-plus"></i> new</span></div>
-        <div id="offeringsListContainer">
-          <!-- dynamic rows injected -->
-        </div>
-      </div>
-
-      <!-- Investor / shareholder list -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-users gold-text"></i> recent investments</div>
-        <div id="investorsList">
-          <div class="batch-row"><span>Spier Wines · 200 shares</span><span>R 14,000</span><span class="badge">dividend R 2,100</span></div>
-          <div class="batch-row"><span>Kyle's Grill · 80 shares</span><span>R 5,600</span><span class="badge">dividend R 840</span></div>
-          <div class="batch-row"><span>Mama's Take · 50 shares</span><span>R 3,500</span><span class="badge">dividend R 525</span></div>
-          <div class="batch-row"><span>Thabo Fresh · 120 shares</span><span>R 8,400</span><span class="badge">dividend R 1,260</span></div>
-        </div>
-        <button class="btn-small" style="margin-top:8px;"><i class="fas fa-file-export"></i> export investor list</button>
-      </div>
-
-      <!-- Admin settings for stock program -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-sliders-h gold-text"></i> stock settings</div>
-        <div class="cost-input"><label>🐔 base share price</label> <input type="number" id="baseSharePrice" value="70" step="5"></div>
-        <div class="cost-input"><label>📈 dividend % of profit</label> <input type="number" id="dividendPercent" value="15" min="0" max="100" step="1"></div>
-        <div class="cost-input"><label>📅 dividend frequency</label> <select id="dividendFreq"><option value="monthly">monthly</option><option value="quarterly" selected>quarterly</option><option value="yearly">yearly</option></select></div>
-        <div class="cost-input"><label>🔒 lock-up period (days)</label> <input type="number" id="lockupDays" value="90" step="10"></div>
-        <button class="btn-small" id="applyStockSettings">apply</button>
-      </div>
-
-      <!-- Quick action: simulate dividend payout -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-bolt gold-text"></i> quick actions</div>
-        <div class="quick-action-grid">
-          <div class="quick-action-btn" id="simulatePayoutBtn"><i class="fas fa-coins"></i> simulate payout</div>
-          <div class="quick-action-btn" id="syncFromSubsBtn"><i class="fas fa-sync-alt"></i> sync subscribers</div>
-          <div class="quick-action-btn" id="generateProspectusBtn"><i class="fas fa-file-pdf"></i> prospectus</div>
-          <div class="quick-action-btn" id="closeOfferingBtn"><i class="fas fa-ban"></i> close offering</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ========== ENHANCED MARKETING COMMAND CENTER ========== -->
-    <div class="tab-pane" id="marketingPane">
-      <!-- Overview KPIs -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-chart-line gold-text"></i> marketing command center · overview</div>
-        <div class="grid-2">
-          <div class="stat"><span class="stat-label">active campaigns</span><div class="stat-value" id="mktActiveCampaigns">6</div></div>
-          <div class="stat"><span class="stat-label">total influencers</span><div class="stat-value" id="mktTotalInfluencers">8</div></div>
-          <div class="stat"><span class="stat-label">monthly ad spend</span><div class="stat-value" id="mktAdSpend">R 12,400</div></div>
-          <div class="stat"><span class="stat-label">attributed revenue</span><div class="stat-value" id="mktAttributedRev">R 34,200</div></div>
-          <div class="stat"><span class="stat-label">ROI (overall)</span><div class="stat-value" id="mktROI">176%</div></div>
-          <div class="stat"><span class="stat-label">CPA</span><div class="stat-value" id="mktCPA">R 326</div></div>
-        </div>
-      </div>
-
-      <!-- Platform Performance -->
-      <div class="card">
-        <div class="card-title"><i class="fab fa-tiktok gold-text"></i> platform performance</div>
-        <div style="overflow-x:auto;">
-          <table class="mini-table">
-            <thead><tr><th>Platform</th><th>Revenue</th><th>Clicks</th><th>Conv.</th><th>CVR</th><th>Ad Spend</th><th>ROI</th></tr></thead>
-            <tbody id="platformTableBody"></tbody>
-          </table>
-        </div>
-        <p class="helper-text">top account: @goldenfeather_za (IG) · top campaign: Easter Special (FB)</p>
-      </div>
-
-      <!-- Influencer Tracking -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-star gold-text"></i> influencer tracking · <span class="btn-small" id="addInfluencerBtn"><i class="fas fa-plus"></i> add</span></div>
-        <div style="overflow-x:auto;">
-          <table class="mini-table">
-            <thead><tr><th>Name</th><th>Platform</th><th>Link</th><th>Revenue</th><th>Orders</th><th>Commission</th><th>Payout</th><th>Rank</th></tr></thead>
-            <tbody id="influencerTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Campaign Tracking -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-bullhorn gold-text"></i> campaigns · top 5 / worst / active</div>
-        <div class="filter-row" id="campaignFilterRow">
-          <span class="filter-chip active" data-campaign-view="top5">top 5</span>
-          <span class="filter-chip" data-campaign-view="worst">worst</span>
-          <span class="filter-chip" data-campaign-view="active">active</span>
-          <span class="filter-chip" data-campaign-view="completed">completed</span>
-        </div>
-        <div id="campaignViewContainer">
-          <!-- populated by JS -->
-        </div>
-      </div>
-
-      <!-- Marketing Playbook -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-book-open gold-text"></i> playbook · brand pillars & scenarios</div>
-        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
-          <span class="badge" style="background:#d4af3720;">Freshness</span>
-          <span class="badge" style="background:#d4af3720;">Convenience</span>
-          <span class="badge" style="background:#d4af3720;">Completeness</span>
-          <span class="badge" style="background:#d4af3720;">Cultural Relevance</span>
-        </div>
-        <div class="cards-scroll">
-          <div class="reward-card"><small>scenario</small><br><strong>Today I'm Lazy</strong><br>🐔 prepared meal</div>
-          <div class="reward-card"><small>scenario</small><br><strong>Sunday Braai</strong><br>🔥 bulk packs</div>
-          <div class="reward-card"><small>scenario</small><br><strong>Unexpected Guests</strong><br>⏱️ 30min delivery</div>
-          <div class="reward-card"><small>template</small><br><strong>Situation → Frustration → App → Delivery → Outcome</strong></div>
-        </div>
-        <div class="cost-input" style="margin-top:12px;"><label>➕ infinite loop idea</label> <input placeholder="new scenario..." id="loopIdeaInput"></div>
-        <button class="btn-small" id="addLoopIdea">add to playbook</button>
-      </div>
-
-      <!-- Revenue Attribution Filters -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-filter gold-text"></i> revenue attribution</div>
-        <div class="filter-bar">
-          <select id="attributionPlatform" class="btn-small" style="background:#2a2a2a;"><option value="all">all platforms</option><option value="tiktok">TikTok</option><option value="instagram">Instagram</option><option value="facebook">Facebook</option><option value="whatsapp">WhatsApp</option><option value="youtube">YouTube</option></select>
-          <select id="attributionInfluencer" class="btn-small" style="background:#2a2a2a;"><option value="all">all influencers</option></select>
-          <select id="attributionCampaign" class="btn-small" style="background:#2a2a2a;"><option value="all">all campaigns</option></select>
-          <input type="date" id="attributionStart" value="2025-04-01" style="background:#2a2a2a; border:1px solid #d4af37; border-radius:30px; padding:4px 8px; color:white;">
-          <span>to</span>
-          <input type="date" id="attributionEnd" value="2025-04-30" style="background:#2a2a2a; border:1px solid #d4af37; border-radius:30px; padding:4px 8px; color:white;">
-        </div>
-        <div class="cost-item"><span>filtered revenue</span> <span class="gold-text" id="filteredRevenue">R 34,200</span></div>
-        <button class="btn-small" id="applyAttribution">apply</button>
-      </div>
-
-      <!-- Analytics Charts (canvas) -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-chart-bar gold-text"></i> platform revenue</div>
-        <canvas id="platformChart" width="300" height="100" style="width:100%; height:100px; background:#1a1a1a; border-radius:16px;"></canvas>
-      </div>
-      <div class="card">
-        <div class="card-title"><i class="fas fa-chart-bar gold-text"></i> influencer revenue</div>
-        <canvas id="influencerChart" width="300" height="100" style="width:100%; height:100px; background:#1a1a1a; border-radius:16px;"></canvas>
-      </div>
-      <div class="card">
-        <div class="card-title"><i class="fas fa-chart-line gold-text"></i> ad spend vs revenue (trend)</div>
-        <canvas id="trendChart" width="300" height="100" style="width:100%; height:100px; background:#1a1a1a; border-radius:16px;"></canvas>
-      </div>
-    </div>
+    <!-- Removed: villageExpansionPane, stockSalePane, marketingPane -->
   </div>
 
   <!-- bottom navigation (unchanged) -->
@@ -1557,45 +1408,12 @@
     <div class="nav-item" data-tab="budget"><i class="fas fa-chart-line"></i><span>Budget</span></div>
   </div>
 
-  <!-- Modals (original) -->
-  <div class="modal-overlay" id="contractModal">
-    <div class="modal-card">
-      <h3 id="modalTitle">➕ new village contract</h3>
-      <div class="cost-input"><label>farm name</label> <input type="text" id="modalFarmName" placeholder="e.g. Mvula Poultry"></div>
-      <div class="cost-input"><label>village</label> <input type="text" id="modalVillage" placeholder="e.g. Lwandle"></div>
-      <div class="cost-input"><label>🐔 chickens/month</label> <input type="number" id="modalChickens" value="500" step="10"></div>
-      <div class="cost-input"><label>💰 our margin %</label> <input type="number" id="modalMargin" value="12" step="0.5" min="0" max="100"></div>
-      <div class="cost-input"><label>📅 start date</label> <input type="date" id="modalStart" value="2025-05-01"></div>
-      <div class="cost-input"><label>📅 end date</label> <input type="date" id="modalEnd" value="2025-10-31"></div>
-      <div class="cost-input"><label>📝 admin notes</label> <input type="text" id="modalNotes" placeholder="negotiation notes"></div>
-      <div class="cost-input"><label>🔗 generate sign link?</label> <input type="checkbox" id="modalGenerateLink" checked></div>
-      <div id="modalSignaturePreview" class="signature-link" style="display:none;">farm.goldenfeather.com/sign/xyz</div>
-      <div class="flex-row" style="justify-content:flex-end;">
-        <button class="btn-small" id="modalCancel">cancel</button>
-        <button class="btn-gold" id="modalSave">save contract</button>
-      </div>
-    </div>
-  </div>
-  <div class="modal-overlay" id="campaignModal">
-    <div class="modal-card">
-      <h3 id="campaignModalTitle">➕ new campaign</h3>
-      <div class="cost-input"><label>campaign name</label> <input type="text" id="campaignName" placeholder="e.g. Easter Special"></div>
-      <div class="cost-input"><label>channel</label> <select id="campaignChannel"><option>Facebook</option><option>Instagram</option><option>Email</option><option>Event</option></select></div>
-      <div class="cost-input"><label>budget (R)</label> <input type="number" id="campaignBudget" value="2000" step="100"></div>
-      <div class="cost-input"><label>start date</label> <input type="date" id="campaignStart" value="2025-04-01"></div>
-      <div class="cost-input"><label>end date</label> <input type="date" id="campaignEnd" value="2025-04-30"></div>
-      <div class="cost-input"><label>target segment</label> <select id="campaignSegment"><option>wholesale</option><option>retail</option><option>restaurant</option><option>subscriber</option></select></div>
-      <div class="flex-row" style="justify-content:flex-end;">
-        <button class="btn-small" id="campaignModalCancel">cancel</button>
-        <button class="btn-gold" id="campaignModalSave">save campaign</button>
-      </div>
-    </div>
-  </div>
+  <!-- Removed: contractModal and campaignModal -->
 </div>
 
-<!-- ALL ORIGINAL SCRIPTS (unchanged) and NEW MARKETING JS (appended) with modification for blueprint link -->
+<!-- ALL ORIGINAL SCRIPTS (modified: removed panes and modules for removed pages) -->
 <script>
-  // ----- tab switching (updated with 'marketing' and support for data-href) -----
+  // ----- tab switching (updated: removed villageExpansion, stockSale, marketing) -----
   (function() {
     const navItems = document.querySelectorAll('.nav-item');
     const panes = {
@@ -1610,10 +1428,8 @@
       crm: document.getElementById('crmPane'),
       festive: document.getElementById('festivePane'),
       subscription: document.getElementById('subscriptionPane'),
-      assurance: document.getElementById('assurancePane'),
-      villageExpansion: document.getElementById('villageExpansionPane'),
-      stockSale: document.getElementById('stockSalePane'),
-      marketing: document.getElementById('marketingPane')
+      assurance: document.getElementById('assurancePane')
+      // removed: villageExpansion, stockSale, marketing
     };
 
     function setActiveTab(tabId) {
@@ -1640,16 +1456,9 @@
       morePanel.classList.toggle('show');
     });
 
-    // Modified more-item click handler to support data-href navigation
     document.querySelectorAll('.more-item').forEach(item => {
       item.addEventListener('click', (e) => {
-        // If the item has a data-href attribute, navigate to that URL
-        const href = item.dataset.href;
-        if (href) {
-          window.location.href = href;
-          return; // Stop further handling
-        }
-        // Otherwise, treat it as a tab switch
+        // No data-href items remain; all are tab switches.
         const tabId = item.dataset.tab;
         setActiveTab(tabId);
       });
@@ -2095,7 +1904,7 @@
     });
   })();
 
-  // ========== FESTIVE PLAN MODULE (original) ==========
+  // ========== FESTIVE PLAN MODULE (modified to generate accordion) ==========
   (function() {
     const festivePane = document.getElementById('festivePane');
     if (!festivePane) return;
@@ -2116,20 +1925,44 @@
       if(document.getElementById('totalChickensReq')) document.getElementById('totalChickensReq').innerText = totalChickens.toLocaleString();
       if(document.getElementById('totalContributions')) document.getElementById('totalContributions').innerText = 'R ' + totalContributions.toLocaleString();
 
-      let html = '';
+      // Generate accordion items
+      let accordionHtml = '';
       villages.forEach(v => {
         const fillPercent = Math.min(100, (v.participants / v.capacity) * 100);
         const lockIcon = v.locked ? '🔒' : '🔓';
-        html += `<div class="batch-row">
-          <div class="batch-info"><h4>${lockIcon} ${v.name}</h4><p>${v.participants} part · ${v.chickensRequired} chks</p></div>
-          <div class="batch-numbers"><span class="quantity">R ${v.contributions}</span><br><span class="badge">due ${v.deadline}</span></div>
-          <div class="village-status"><div class="capacity-bar"><div class="capacity-fill" style="width:${fillPercent}%"></div></div>
-          <button class="btn-small" data-id="${v.id}" data-action="adj">adj</button>
-          <button class="btn-small" data-id="${v.id}" data-action="lock">${v.locked?'unlock':'lock'}</button></div>
-        </div>`;
+        const summary = `
+          <span><strong>${lockIcon} ${v.name}</strong></span>
+          <span class="badge">${fillPercent.toFixed(0)}% filled</span>
+          <span>📅 ${v.deadline}</span>
+          <span class="badge ${v.locked ? 'alert-badge' : ''}">${v.locked ? 'Locked' : 'Open'}</span>
+        `;
+        const expandedContent = `
+          <div class="batch-row"><span>Participants:</span> <span>${v.participants}</span></div>
+          <div class="batch-row"><span>Chickens required:</span> <span>${v.chickensRequired}</span></div>
+          <div class="batch-row"><span>Contributions:</span> <span>R ${v.contributions}</span></div>
+          <div class="batch-row"><span>Capacity:</span> <span>${v.capacity}</span></div>
+          <div class="batch-row"><span>Deadline:</span> <span>${v.deadline}</span></div>
+          <div class="batch-row"><span>Payment tracking:</span> <span>78% collected</span></div>
+          <div class="flex-row">
+            <button class="btn-small" data-id="${v.id}" data-action="adj">adjust capacity</button>
+            <button class="btn-small" data-id="${v.id}" data-action="lock">${v.locked?'unlock':'lock'}</button>
+            <button class="btn-small" data-id="${v.id}" data-action="approve">approve</button>
+            <button class="btn-small" data-id="${v.id}" data-action="refund">refund</button>
+          </div>
+          <p class="helper-text">Production allocation: 75% · Audit log: last edited 2d ago</p>
+        `;
+        accordionHtml += `
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-summary">${summary}</div>
+              <i class="fas fa-chevron-right arrow"></i>
+            </div>
+            <div class="accordion-body">${expandedContent}</div>
+          </div>
+        `;
       });
       const container = document.getElementById('villageListContainer');
-      if(container) container.innerHTML = html;
+      if(container) container.innerHTML = accordionHtml;
 
       let selectOpts = '<option>-- select village --</option>';
       villages.forEach(v => selectOpts += `<option value="${v.id}">${v.name}</option>`);
@@ -2196,7 +2029,7 @@
     updateFestiveUI();
   })();
 
-  // ========== SUBSCRIPTION ADMIN MODULE (original) ==========
+  // ========== SUBSCRIPTION ADMIN MODULE (modified to generate accordion) ==========
   (function() {
     const subPane = document.getElementById('subscriptionPane');
     if (!subPane) return;
@@ -2222,17 +2055,42 @@
       const outstanding = members.reduce((acc, m) => acc + (m.total - m.depositPaid), 0);
       document.getElementById('outstandingBalance').innerText = 'R ' + outstanding.toLocaleString();
 
-      let html = '';
+      // Generate accordion for members
+      let accordionHtml = '';
       members.forEach(m => {
-        html += `<div class="batch-row">
-          <div class="batch-info"><h4>${m.name} ${m.vip ? '⭐' : ''}</h4><p>${m.tier} · ${m.monthlyQty} chickens/m</p></div>
-          <div class="batch-numbers"><span class="quantity">R ${m.total}</span><br><span class="badge">deposit R ${m.depositPaid}</span></div>
-          <div><button class="btn-small" data-id="${m.id}" data-action="upgrade">⬆️</button>
-          <button class="btn-small" data-id="${m.id}" data-action="downgrade">⬇️</button>
-          <button class="btn-small" data-id="${m.id}" data-action="toggleVIP">👑</button></div>
-        </div>`;
+        const summary = `
+          <span><strong>${m.name} ${m.vip ? '⭐' : ''}</strong></span>
+          <span class="badge">${m.tier}</span>
+          <span>🐔 ${m.monthlyQty}/mo</span>
+          <span class="badge ${m.locked ? 'alert-badge' : ''}">${m.locked ? 'Paused' : 'Active'}</span>
+          <span>📅 next: 2025-04-15</span>
+        `;
+        const expanded = `
+          <div class="batch-row"><span>Subscription history:</span> <span>since Jan 2025 · 3 months</span></div>
+          <div class="batch-row"><span>Upcoming deliveries:</span> <span>Apr 15, May 15, Jun 15</span></div>
+          <div class="batch-row"><span>Holiday reservations:</span> <span>${m.holidayAlloc} chickens</span></div>
+          <div class="batch-row"><span>Deposit tracking:</span> <span>R ${m.depositPaid} paid</span></div>
+          <div class="batch-row"><span>Assurance integration:</span> <span>${m.vip ? 'VIP' : 'Standard'}</span></div>
+          <div class="batch-row"><span>Loyalty credits:</span> <span>R ${Math.floor(m.total*0.05)}</span></div>
+          <div class="flex-row">
+            <button class="btn-small" data-id="${m.id}" data-action="upgrade">⬆️ upgrade</button>
+            <button class="btn-small" data-id="${m.id}" data-action="downgrade">⬇️ downgrade</button>
+            <button class="btn-small" data-id="${m.id}" data-action="toggleVIP">👑 VIP</button>
+            <button class="btn-small" data-id="${m.id}" data-action="pause">⏸️ pause</button>
+            <button class="btn-small" data-id="${m.id}" data-action="override">⚙️ override</button>
+          </div>
+        `;
+        accordionHtml += `
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-summary">${summary}</div>
+              <i class="fas fa-chevron-right arrow"></i>
+            </div>
+            <div class="accordion-body">${expanded}</div>
+          </div>
+        `;
       });
-      document.getElementById('subscriptionMembersList').innerHTML = html;
+      document.getElementById('subscriptionMembersList').innerHTML = accordionHtml;
     }
 
     document.addEventListener('click', (e) => {
@@ -2283,17 +2141,42 @@
         if (tier !== 'all') {
           filtered = members.filter(m => m.tier === tier);
         }
-        let html = '';
+        // Re-render accordion with filtered members
+        let accordionHtml = '';
         filtered.forEach(m => {
-          html += `<div class="batch-row">
-            <div class="batch-info"><h4>${m.name} ${m.vip ? '⭐' : ''}</h4><p>${m.tier} · ${m.monthlyQty} chickens/m</p></div>
-            <div class="batch-numbers"><span class="quantity">R ${m.total}</span><br><span class="badge">deposit R ${m.depositPaid}</span></div>
-            <div><button class="btn-small" data-id="${m.id}" data-action="upgrade">⬆️</button>
-            <button class="btn-small" data-id="${m.id}" data-action="downgrade">⬇️</button>
-            <button class="btn-small" data-id="${m.id}" data-action="toggleVIP">👑</button></div>
-          </div>`;
+          const summary = `
+            <span><strong>${m.name} ${m.vip ? '⭐' : ''}</strong></span>
+            <span class="badge">${m.tier}</span>
+            <span>🐔 ${m.monthlyQty}/mo</span>
+            <span class="badge ${m.locked ? 'alert-badge' : ''}">${m.locked ? 'Paused' : 'Active'}</span>
+            <span>📅 next: 2025-04-15</span>
+          `;
+          const expanded = `
+            <div class="batch-row"><span>Subscription history:</span> <span>since Jan 2025 · 3 months</span></div>
+            <div class="batch-row"><span>Upcoming deliveries:</span> <span>Apr 15, May 15, Jun 15</span></div>
+            <div class="batch-row"><span>Holiday reservations:</span> <span>${m.holidayAlloc} chickens</span></div>
+            <div class="batch-row"><span>Deposit tracking:</span> <span>R ${m.depositPaid} paid</span></div>
+            <div class="batch-row"><span>Assurance integration:</span> <span>${m.vip ? 'VIP' : 'Standard'}</span></div>
+            <div class="batch-row"><span>Loyalty credits:</span> <span>R ${Math.floor(m.total*0.05)}</span></div>
+            <div class="flex-row">
+              <button class="btn-small" data-id="${m.id}" data-action="upgrade">⬆️ upgrade</button>
+              <button class="btn-small" data-id="${m.id}" data-action="downgrade">⬇️ downgrade</button>
+              <button class="btn-small" data-id="${m.id}" data-action="toggleVIP">👑 VIP</button>
+              <button class="btn-small" data-id="${m.id}" data-action="pause">⏸️ pause</button>
+              <button class="btn-small" data-id="${m.id}" data-action="override">⚙️ override</button>
+            </div>
+          `;
+          accordionHtml += `
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <div class="accordion-summary">${summary}</div>
+                <i class="fas fa-chevron-right arrow"></i>
+              </div>
+              <div class="accordion-body">${expanded}</div>
+            </div>
+          `;
         });
-        document.getElementById('subscriptionMembersList').innerHTML = html;
+        document.getElementById('subscriptionMembersList').innerHTML = accordionHtml;
       });
     });
 
@@ -2321,12 +2204,11 @@
     updateSubUI();
   })();
 
-  // ========== ASSURANCE MODULE (original) ==========
+  // ========== ASSURANCE MODULE (modified to generate accordion) ==========
   (function() {
     const assurancePane = document.getElementById('assurancePane');
     if (!assurancePane) return;
 
-    // Mock assurance members (linked to subscription members)
     let assuranceMembers = [
       { id: 1, name: 'Spier Wines', active: true, monthlyContribution: 1200, totalAllocated: 30, pendingClaim: 0, loyaltyCredits: 180, subscribed: true },
       { id: 2, name: 'Kyle’s Grill', active: true, monthlyContribution: 860, totalAllocated: 22, pendingClaim: 860, loyaltyCredits: 95, subscribed: true },
@@ -2349,17 +2231,37 @@
       const totalAlloc = assuranceMembers.reduce((acc, m) => acc + m.totalAllocated, 0);
       document.getElementById('assuranceAllocations').innerText = totalAlloc;
 
-      // member list
-      let html = '';
+      // Generate accordion for members
+      let accordionHtml = '';
       assuranceMembers.forEach(m => {
-        html += `<div class="batch-row">
-          <div class="batch-info"><h4>${m.name} ${m.active ? '✅' : '❌'}</h4><p>monthly R ${m.monthlyContribution} · alloc ${m.totalAllocated}</p></div>
-          <div class="batch-numbers"><span class="quantity">loyalty R ${m.loyaltyCredits}</span><br><span class="badge">${m.pendingClaim ? 'claim R '+m.pendingClaim : 'no claim'}</span></div>
-          <div><button class="btn-small" data-aid="${m.id}" data-aaction="toggleActive">toggle</button>
-          <button class="btn-small" data-aid="${m.id}" data-aaction="adjustContribution">💰</button></div>
-        </div>`;
+        const summary = `
+          <span><strong>${m.name}</strong></span>
+          <span>💰 R ${m.monthlyContribution}</span>
+          <span>🐔 ${m.totalAllocated}</span>
+          <span class="badge ${m.pendingClaim ? 'alert-badge' : ''}">${m.pendingClaim ? 'claim' : 'no claim'}</span>
+        `;
+        const expanded = `
+          <div class="batch-row"><span>Contribution history:</span> <span>6 months · R ${m.monthlyContribution*6}</span></div>
+          <div class="batch-row"><span>Claim history:</span> <span>${m.pendingClaim ? '1 pending' : 'none'}</span></div>
+          <div class="batch-row"><span>Loyalty credits generated:</span> <span>R ${m.loyaltyCredits}</span></div>
+          <div class="flex-row">
+            <button class="btn-small" data-aid="${m.id}" data-aaction="toggleActive">toggle active</button>
+            <button class="btn-small" data-aid="${m.id}" data-aaction="adjustContribution">💰 adjust</button>
+            <button class="btn-small" data-aid="${m.id}" data-aaction="approveClaim">approve claim</button>
+            <button class="btn-small" data-aid="${m.id}" data-aaction="rejectClaim">reject</button>
+          </div>
+        `;
+        accordionHtml += `
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <div class="accordion-summary">${summary}</div>
+              <i class="fas fa-chevron-right arrow"></i>
+            </div>
+            <div class="accordion-body">${expanded}</div>
+          </div>
+        `;
       });
-      document.getElementById('assuranceMembersList').innerHTML = html;
+      document.getElementById('assuranceMembersList').innerHTML = accordionHtml;
     }
 
     // Event delegation for assurance actions
@@ -2403,16 +2305,37 @@
         let filtered = assuranceMembers;
         if (filter === 'active') filtered = assuranceMembers.filter(m => m.active);
         else if (filter === 'pending') filtered = assuranceMembers.filter(m => m.pendingClaim > 0);
-        let html = '';
+        // Re-render accordion
+        let accordionHtml = '';
         filtered.forEach(m => {
-          html += `<div class="batch-row">
-            <div class="batch-info"><h4>${m.name} ${m.active ? '✅' : '❌'}</h4><p>monthly R ${m.monthlyContribution} · alloc ${m.totalAllocated}</p></div>
-            <div class="batch-numbers"><span class="quantity">loyalty R ${m.loyaltyCredits}</span><br><span class="badge">${m.pendingClaim ? 'claim R '+m.pendingClaim : 'no claim'}</span></div>
-            <div><button class="btn-small" data-aid="${m.id}" data-aaction="toggleActive">toggle</button>
-            <button class="btn-small" data-aid="${m.id}" data-aaction="adjustContribution">💰</button></div>
-          </div>`;
+          const summary = `
+            <span><strong>${m.name}</strong></span>
+            <span>💰 R ${m.monthlyContribution}</span>
+            <span>🐔 ${m.totalAllocated}</span>
+            <span class="badge ${m.pendingClaim ? 'alert-badge' : ''}">${m.pendingClaim ? 'claim' : 'no claim'}</span>
+          `;
+          const expanded = `
+            <div class="batch-row"><span>Contribution history:</span> <span>6 months · R ${m.monthlyContribution*6}</span></div>
+            <div class="batch-row"><span>Claim history:</span> <span>${m.pendingClaim ? '1 pending' : 'none'}</span></div>
+            <div class="batch-row"><span>Loyalty credits generated:</span> <span>R ${m.loyaltyCredits}</span></div>
+            <div class="flex-row">
+              <button class="btn-small" data-aid="${m.id}" data-aaction="toggleActive">toggle active</button>
+              <button class="btn-small" data-aid="${m.id}" data-aaction="adjustContribution">💰 adjust</button>
+              <button class="btn-small" data-aid="${m.id}" data-aaction="approveClaim">approve claim</button>
+              <button class="btn-small" data-aid="${m.id}" data-aaction="rejectClaim">reject</button>
+            </div>
+          `;
+          accordionHtml += `
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <div class="accordion-summary">${summary}</div>
+                <i class="fas fa-chevron-right arrow"></i>
+              </div>
+              <div class="accordion-body">${expanded}</div>
+            </div>
+          `;
         });
-        document.getElementById('assuranceMembersList').innerHTML = html;
+        document.getElementById('assuranceMembersList').innerHTML = accordionHtml;
       });
     });
 
@@ -2447,554 +2370,21 @@
     updateAssuranceUI();
   })();
 
-  // ========== VILLAGE EXPANSION MODULE (original) ==========
-  (function() {
-    const pane = document.getElementById('villageExpansionPane');
-    if (!pane) return;
+  // Removed: VILLAGE EXPANSION MODULE, STOCK SALE MODULE, MARKETING COMMAND CENTER MODULE
 
-    // Mock contract data
-    let contracts = [
-      { id: 1, farm: 'Mvula Poultry', village: 'Lwandle', chickens: 800, margin: 12, start: '2025-01-01', end: '2025-06-30', notes: 'family owned, needs transport support', signed: true, revenue: 9600 },
-      { id: 2, farm: 'Sundumbili Coop', village: 'Sundumbili', chickens: 1200, margin: 10, start: '2025-02-15', end: '2025-08-15', notes: 'bulk supplier', signed: true, revenue: 12000 },
-      { id: 3, farm: 'Eden Valley', village: 'Mthatha', chickens: 650, margin: 15, start: '2025-03-10', end: '2025-09-10', notes: 'organic certification pending', signed: false, revenue: 9750 },
-      { id: 4, farm: 'KwaNobuhle Fresh', village: 'KwaNobuhle', chickens: 800, margin: 12, start: '2024-12-01', end: '2025-05-01', notes: 'renewal due', signed: true, revenue: 9600 },
-      { id: 5, farm: 'Lwandle Rise', village: 'Lwandle', chickens: 500, margin: 14, start: '2025-04-01', end: '2025-10-01', notes: 'new entrant', signed: true, revenue: 7000 }
-    ];
-
-    // Budget inputs
-    const budgetTravel = document.getElementById('budgetTravel');
-    const budgetMgmt = document.getElementById('budgetMgmt');
-    const budgetSupply = document.getElementById('budgetSupply');
-
-    function updateVillageUI() {
-      // Update stats
-      document.getElementById('villageCount').innerText = contracts.length;
-      const totalChickens = contracts.reduce((acc, c) => acc + c.chickens, 0);
-      document.getElementById('totalChickensVillage').innerText = totalChickens.toLocaleString();
-      const totalProfit = contracts.reduce((acc, c) => acc + (c.chickens * c.margin/100 * 100), 0); // assume avg price R100
-      document.getElementById('expectedProfitVillage').innerText = 'R ' + totalProfit.toLocaleString();
-      const expiring = contracts.filter(c => {
-        const days = (new Date(c.end) - new Date()) / (1000*60*60*24);
-        return days <= 30 && days > 0;
-      }).length;
-      document.getElementById('expiringContracts').innerText = expiring;
-
-      // Build contracts list
-      let html = '';
-      contracts.forEach(c => {
-        const status = c.signed ? '✅ signed' : '⏳ pending';
-        const daysToEnd = Math.ceil((new Date(c.end) - new Date()) / (1000*60*60*24));
-        const expiryBadge = daysToEnd < 30 ? `<span class="badge alert-badge">expires in ${daysToEnd}d</span>` : '';
-        html += `<div class="batch-row">
-          <div class="batch-info"><h4>${c.farm} <span class="badge">${c.village}</span></h4>
-            <p>🐔 ${c.chickens}/month · margin ${c.margin}% · ${status} ${expiryBadge}</p>
-            <small>${c.notes}</small></div>
-          <div class="batch-numbers">
-            <span class="quantity">R ${(c.chickens * 100 * c.margin/100).toFixed(0)}</span><br>
-            <span class="badge">${c.start} – ${c.end}</span>
-          </div>
-          <div><button class="btn-small" data-contract-id="${c.id}" data-action="sign">🔗 sign</button>
-          <button class="btn-small" data-contract-id="${c.id}" data-action="edit">✎</button></div>
-        </div>`;
-      });
-      document.getElementById('contractsListContainer').innerHTML = html;
-
-      // Update budget total
-      const travel = parseFloat(budgetTravel?.value) || 0;
-      const mgmt = parseFloat(budgetMgmt?.value) || 0;
-      const supply = parseFloat(budgetSupply?.value) || 0;
-      const totalBudget = travel + mgmt + supply;
-      document.getElementById('totalBudget').innerText = 'R ' + totalBudget.toLocaleString();
-      document.getElementById('projectedSupply').innerText = totalChickens + ' chickens';
-      const costPer = totalChickens ? (totalBudget / totalChickens).toFixed(2) : 0;
-      document.getElementById('costPerChickenVillage').innerText = 'R ' + costPer;
-      const budgetPercent = Math.min(100, (totalBudget / 20000) * 100); // arbitrary scale
-      document.getElementById('budgetBar').style.width = budgetPercent + '%';
-
-      // transport fees mock
-      document.getElementById('transportFees').innerText = 'R ' + (totalChickens * 0.7).toFixed(0);
-
-      // expiring alerts
-      if (expiring > 0) {
-        document.getElementById('expiringAlerts').innerHTML = `⚠️ ${expiring} contract(s) expire within 30 days`;
-      } else {
-        document.getElementById('expiringAlerts').innerHTML = '✅ no expiring contracts';
-      }
-
-      // chart: chickens per village
-      const villageMap = {};
-      contracts.forEach(c => { villageMap[c.village] = (villageMap[c.village] || 0) + c.chickens; });
-      const villages = Object.keys(villageMap);
-      const chartDiv = document.getElementById('villageChart');
-      const labelsDiv = document.getElementById('villageLabels');
-      chartDiv.innerHTML = '';
-      labelsDiv.innerHTML = '';
-      const maxVal = Math.max(...Object.values(villageMap));
-      villages.forEach(v => {
-        const h = (villageMap[v] / maxVal) * 70;
-        chartDiv.innerHTML += `<div style="flex:1; background:#d4af37; height:${h}px; border-radius:8px 8px 0 0;"></div>`;
-        labelsDiv.innerHTML += `<span style="flex:1; text-align:center; font-size:0.6rem;">${v.slice(0,3)}</span>`;
-      });
-
-      // pending deliveries (mock integration with subscription)
-      document.getElementById('pendingDeliveries').innerText = Math.floor(Math.random() * 5) + 2;
+  // ========== GLOBAL ACCORDION TOGGLE ==========
+  document.addEventListener('click', function(e) {
+    const header = e.target.closest('.accordion-header');
+    if (!header) return;
+    e.preventDefault();
+    const item = header.closest('.accordion-item');
+    const body = item.querySelector('.accordion-body');
+    const arrow = header.querySelector('.arrow');
+    if (body) {
+      body.classList.toggle('expanded');
+      header.classList.toggle('expanded');
     }
-
-    // modal handling
-    const modal = document.getElementById('contractModal');
-    const openBtn = document.getElementById('openAddContractModal');
-    const cancelBtn = document.getElementById('modalCancel');
-    const saveBtn = document.getElementById('modalSave');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalFarm = document.getElementById('modalFarmName');
-    const modalVillage = document.getElementById('modalVillage');
-    const modalChickens = document.getElementById('modalChickens');
-    const modalMargin = document.getElementById('modalMargin');
-    const modalStart = document.getElementById('modalStart');
-    const modalEnd = document.getElementById('modalEnd');
-    const modalNotes = document.getElementById('modalNotes');
-    const modalGenerateLink = document.getElementById('modalGenerateLink');
-    const modalSignaturePreview = document.getElementById('modalSignaturePreview');
-    let editingId = null;
-
-    function openModal(contract = null) {
-      if (contract) {
-        editingId = contract.id;
-        modalTitle.innerText = '✎ edit contract';
-        modalFarm.value = contract.farm;
-        modalVillage.value = contract.village;
-        modalChickens.value = contract.chickens;
-        modalMargin.value = contract.margin;
-        modalStart.value = contract.start;
-        modalEnd.value = contract.end;
-        modalNotes.value = contract.notes;
-      } else {
-        editingId = null;
-        modalTitle.innerText = '➕ new village contract';
-        modalFarm.value = '';
-        modalVillage.value = '';
-        modalChickens.value = 500;
-        modalMargin.value = 12;
-        const today = new Date().toISOString().split('T')[0];
-        modalStart.value = today;
-        const nextYear = new Date(); nextYear.setFullYear(nextYear.getFullYear()+1);
-        modalEnd.value = nextYear.toISOString().split('T')[0];
-        modalNotes.value = '';
-      }
-      modalGenerateLink.checked = true;
-      modalSignaturePreview.style.display = 'none';
-      modal.style.display = 'flex';
-    }
-
-    openBtn.addEventListener('click', () => openModal());
-    cancelBtn.addEventListener('click', () => { modal.style.display = 'none'; });
-    window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
-
-    saveBtn.addEventListener('click', () => {
-      const newContract = {
-        id: editingId || (Math.max(...contracts.map(c => c.id), 0) + 1),
-        farm: modalFarm.value,
-        village: modalVillage.value,
-        chickens: parseInt(modalChickens.value) || 0,
-        margin: parseFloat(modalMargin.value) || 0,
-        start: modalStart.value,
-        end: modalEnd.value,
-        notes: modalNotes.value,
-        signed: false,
-        revenue: (parseInt(modalChickens.value) * 100 * (parseFloat(modalMargin.value)/100)) || 0
-      };
-      if (editingId) {
-        const index = contracts.findIndex(c => c.id === editingId);
-        if (index !== -1) contracts[index] = newContract;
-      } else {
-        contracts.push(newContract);
-      }
-      if (modalGenerateLink.checked) {
-        const fakeLink = `https://farm.goldenfeather.com/sign/${newContract.id}_${Date.now()}`;
-        modalSignaturePreview.innerText = fakeLink;
-        modalSignaturePreview.style.display = 'block';
-        newContract.signLink = fakeLink;
-      } else {
-        modalSignaturePreview.style.display = 'none';
-      }
-      updateVillageUI();
-      modal.style.display = 'none';
-    });
-
-    // Event delegation for sign/edit buttons
-    document.addEventListener('click', (e) => {
-      if (!pane.contains(e.target)) return;
-      const target = e.target;
-      if (target.matches('[data-action="sign"]')) {
-        const id = parseInt(target.dataset.contractId);
-        const contract = contracts.find(c => c.id === id);
-        if (contract && !contract.signed) {
-          const link = `https://farm.goldenfeather.com/sign/${id}_mock`;
-          alert(`🔗 digital signature link generated:\n${link}\n(Send this to the farm)`);
-          contract.signed = true;
-          updateVillageUI();
-        } else if (contract && contract.signed) {
-          alert('Contract already signed.');
-        }
-      }
-      if (target.matches('[data-action="edit"]')) {
-        const id = parseInt(target.dataset.contractId);
-        const contract = contracts.find(c => c.id === id);
-        if (contract) openModal(contract);
-      }
-    });
-
-    // Budget listeners
-    [budgetTravel, budgetMgmt, budgetSupply].forEach(inp => inp.addEventListener('input', updateVillageUI));
-
-    // Sync with subscriptions (mock)
-    document.getElementById('syncDeliveriesBtn').addEventListener('click', () => {
-      alert('Syncing with subscription demand: 187 chickens assigned to villages.');
-      document.getElementById('pendingDeliveries').innerText = '0';
-    });
-
-    document.getElementById('generateFarmLinkBtn').addEventListener('click', () => {
-      const linkDiv = document.getElementById('tempFarmLink');
-      linkDiv.style.display = 'block';
-      linkDiv.innerText = 'https://farm.goldenfeather.com/portal?code=' + Math.random().toString(36).substring(7);
-    });
-
-    updateVillageUI();
-  })();
-
-  // ========== STOCK SALE MODULE (original) ==========
-  (function() {
-    const pane = document.getElementById('stockSalePane');
-    if (!pane) return;
-
-    // Mock offerings data
-    let offerings = [
-      { id: 1, name: 'Batch B2401 · Cornish', sharesTotal: 1000, sharesSold: 680, sharePrice: 70, raised: 47600, expectedDividend: 7140, status: 'active' },
-      { id: 2, name: 'Batch B2402 · Ross', sharesTotal: 1500, sharesSold: 420, sharePrice: 68, raised: 28560, expectedDividend: 4284, status: 'active' },
-      { id: 3, name: 'New Free-range (B2403)', sharesTotal: 800, sharesSold: 150, sharePrice: 75, raised: 11250, expectedDividend: 1688, status: 'active' },
-    ];
-
-    function updateStockUI() {
-      const active = offerings.filter(o => o.status === 'active').length;
-      const totalShares = offerings.reduce((acc, o) => acc + o.sharesSold, 0);
-      const totalRaised = offerings.reduce((acc, o) => acc + o.raised, 0);
-      const totalDividend = offerings.reduce((acc, o) => acc + o.expectedDividend, 0);
-      const avgPrice = totalShares ? (totalRaised / totalShares).toFixed(2) : 70;
-
-      document.getElementById('activeOfferings').innerText = active;
-      document.getElementById('sharesSold').innerText = totalShares.toLocaleString();
-      document.getElementById('capitalRaised').innerText = 'R ' + totalRaised.toLocaleString();
-      document.getElementById('expectedDividend').innerText = 'R ' + totalDividend.toLocaleString();
-      document.getElementById('avgSharePrice').innerText = 'R ' + avgPrice;
-      document.getElementById('projectedROI').innerText = ((totalDividend / totalRaised * 100) || 15).toFixed(1) + '%';
-
-      // offerings list
-      let html = '';
-      offerings.forEach(o => {
-        const progress = (o.sharesSold / o.sharesTotal * 100).toFixed(0);
-        html += `<div class="batch-row">
-          <div class="batch-info"><h4>${o.name}</h4><p>shares ${o.sharesSold}/${o.sharesTotal} · R ${o.sharePrice}/share</p></div>
-          <div class="batch-numbers"><span class="quantity">R ${o.raised}</span><br><span class="badge">${progress}% sold</span></div>
-          <div><button class="btn-small" data-offer-id="${o.id}" data-offer-action="sell">➕ sell</button>
-          <button class="btn-small" data-offer-id="${o.id}" data-offer-action="close">🔒 close</button></div>
-        </div>`;
-      });
-      document.getElementById('offeringsListContainer').innerHTML = html;
-    }
-
-    // add new offering
-    document.getElementById('addOfferingBtn').addEventListener('click', () => {
-      const newId = offerings.length ? Math.max(...offerings.map(o => o.id)) + 1 : 4;
-      const name = prompt('Offering name (e.g., Batch B2404):', 'Batch B2404 · Free-range');
-      if (!name) return;
-      const total = parseInt(prompt('Total shares:', '1000')) || 1000;
-      const price = parseInt(prompt('Share price (R):', '70')) || 70;
-      offerings.push({
-        id: newId,
-        name: name,
-        sharesTotal: total,
-        sharesSold: 0,
-        sharePrice: price,
-        raised: 0,
-        expectedDividend: 0,
-        status: 'active'
-      });
-      updateStockUI();
-    });
-
-    // actions on offerings
-    document.addEventListener('click', (e) => {
-      if (!pane.contains(e.target)) return;
-      const target = e.target;
-      if (target.matches('[data-offer-action="sell"]')) {
-        const id = parseInt(target.dataset.offerId);
-        const offer = offerings.find(o => o.id === id);
-        if (offer) {
-          const qty = parseInt(prompt('Number of shares to sell:', '10')) || 0;
-          if (qty > 0 && offer.sharesSold + qty <= offer.sharesTotal) {
-            offer.sharesSold += qty;
-            offer.raised += qty * offer.sharePrice;
-            offer.expectedDividend += qty * offer.sharePrice * 0.15; // 15% mock dividend
-            updateStockUI();
-          } else {
-            alert('Not enough shares available.');
-          }
-        }
-      }
-      if (target.matches('[data-offer-action="close"]')) {
-        const id = parseInt(target.dataset.offerId);
-        const offer = offerings.find(o => o.id === id);
-        if (offer) {
-          offer.status = 'closed';
-          updateStockUI();
-        }
-      }
-    });
-
-    // settings
-    document.getElementById('applyStockSettings').addEventListener('click', () => {
-      const basePrice = parseFloat(document.getElementById('baseSharePrice').value) || 70;
-      const divPct = parseFloat(document.getElementById('dividendPercent').value) || 15;
-      const freq = document.getElementById('dividendFreq').value;
-      const lockup = parseInt(document.getElementById('lockupDays').value) || 90;
-      alert(`Stock settings updated: base price R${basePrice}, dividend ${divPct}%, ${freq}, lockup ${lockup} days.`);
-    });
-
-    // quick actions
-    document.getElementById('simulatePayoutBtn').addEventListener('click', () => {
-      const totalDiv = offerings.reduce((acc, o) => acc + o.expectedDividend, 0);
-      alert(`💸 Simulated dividend payout: R ${totalDiv.toLocaleString()} to all shareholders.`);
-    });
-    document.getElementById('syncFromSubsBtn').addEventListener('click', () => {
-      alert('Syncing subscribers as potential investors... (mock)');
-    });
-    document.getElementById('generateProspectusBtn').addEventListener('click', () => {
-      alert('📄 Generating prospectus PDF... (mock)');
-    });
-    document.getElementById('closeOfferingBtn').addEventListener('click', () => {
-      alert('Closing selected offering (mock)');
-    });
-
-    updateStockUI();
-  })();
-
-  // ========== NEW ENHANCED MARKETING COMMAND CENTER ==========
-  (function() {
-    const pane = document.getElementById('marketingPane');
-    if (!pane) return;
-
-    // ---------- Mock Data ----------
-    const platforms = [
-      { name: 'TikTok', revenue: 8200, clicks: 2100, conversions: 42, adSpend: 2800, roi: 193, topAccount: '@goldenfeather_', topCampaign: 'Behind the Scenes' },
-      { name: 'Instagram', revenue: 12400, clicks: 3400, conversions: 68, adSpend: 3900, roi: 218, topAccount: '@goldenfeather_za', topCampaign: 'Sunday Braai' },
-      { name: 'Facebook', revenue: 9800, clicks: 2700, conversions: 51, adSpend: 3100, roi: 216, topAccount: 'Golden Feather Poultry', topCampaign: 'Easter Special' },
-      { name: 'WhatsApp', revenue: 2600, clicks: 800, conversions: 13, adSpend: 500, roi: 420, topAccount: 'Broadcast List', topCampaign: 'Flash Sale' },
-      { name: 'YouTube', revenue: 3200, clicks: 950, conversions: 19, adSpend: 1200, roi: 167, topAccount: '@goldenfeatherTV', topCampaign: 'Farm Tour' }
-    ];
-
-    const influencers = [
-      { name: 'Thembi Khumalo', platform: 'Instagram', link: 'instagr.am/thembi_food', revenue: 2800, orders: 22, commission: 10, payout: 280, rank: 'A' },
-      { name: 'Sipho Dlamini', platform: 'TikTok', link: 'tiktok.com/@siphogrills', revenue: 3400, orders: 28, commission: 12, payout: 408, rank: 'A+' },
-      { name: 'Lerato Mokoena', platform: 'Facebook', link: 'fb.com/lerato.eats', revenue: 1900, orders: 15, commission: 8, payout: 152, rank: 'B' },
-      { name: 'Nomsa Buthelezi', platform: 'YouTube', link: 'youtube.com/@nomsacooks', revenue: 1100, orders: 9, commission: 10, payout: 110, rank: 'B-' },
-      { name: 'Kagiso Rantao', platform: 'TikTok', link: 'tiktok.com/@chef_k', revenue: 4200, orders: 33, commission: 15, payout: 630, rank: 'S' }
-    ];
-
-    const campaigns = [
-      { name: 'Easter Special', platform: 'Facebook', influencer: 'Lerato Mokoena', start: '2025-04-01', end: '2025-04-15', budget: 2000, spent: 1200, revenue: 3800, profit: 2600, roi: 217, clicks: 540, cvr: 4.2, status: 'active' },
-      { name: 'Sunday Braai', platform: 'Instagram', influencer: 'Thembi Khumalo', start: '2025-04-05', end: '2025-04-20', budget: 1800, spent: 1300, revenue: 4200, profit: 2900, roi: 223, clicks: 620, cvr: 4.8, status: 'active' },
-      { name: 'Flash Sale', platform: 'WhatsApp', influencer: null, start: '2025-04-10', end: '2025-04-12', budget: 500, spent: 450, revenue: 1100, profit: 650, roi: 144, clicks: 180, cvr: 7.2, status: 'completed' },
-      { name: 'Farm Tour', platform: 'YouTube', influencer: 'Nomsa Buthelezi', start: '2025-04-15', end: '2025-04-30', budget: 1500, spent: 600, revenue: 2100, profit: 1500, roi: 250, clicks: 320, cvr: 5.9, status: 'active' },
-      { name: 'Referral Program', platform: 'All', influencer: null, start: '2025-04-01', end: '2025-05-01', budget: 1000, spent: 800, revenue: 2400, profit: 1600, roi: 200, clicks: 410, cvr: 3.4, status: 'active' },
-      { name: 'Winter Prep', platform: 'Facebook', influencer: 'Sipho Dlamini', start: '2025-03-20', end: '2025-04-05', budget: 1200, spent: 1150, revenue: 2100, profit: 950, roi: 83, clicks: 280, cvr: 2.1, status: 'completed' }
-    ];
-
-    // ---------- Render Functions ----------
-    function renderPlatforms() {
-      const tbody = document.getElementById('platformTableBody');
-      if (!tbody) return;
-      tbody.innerHTML = platforms.map(p => `<tr>
-        <td>${p.name}</td><td>R ${p.revenue}</td><td>${p.clicks}</td><td>${p.conversions}</td>
-        <td>${((p.conversions/p.clicks)*100).toFixed(1)}%</td><td>R ${p.adSpend}</td><td>${p.roi}%</td>
-      </tr>`).join('');
-    }
-
-    function renderInfluencers() {
-      const tbody = document.getElementById('influencerTableBody');
-      if (!tbody) return;
-      tbody.innerHTML = influencers.map(i => `<tr>
-        <td>${i.name}</td><td>${i.platform}</td><td><a href="#" style="color:#d4af37;">link</a></td>
-        <td>R ${i.revenue}</td><td>${i.orders}</td><td>${i.commission}%</td><td>R ${i.payout}</td><td>${i.rank}</td>
-      </tr>`).join('');
-    }
-
-    function renderCampaigns(view = 'top5') {
-      const container = document.getElementById('campaignViewContainer');
-      if (!container) return;
-      let filtered = [...campaigns];
-      if (view === 'top5') filtered = campaigns.sort((a,b) => b.roi - a.roi).slice(0,5);
-      else if (view === 'worst') filtered = campaigns.sort((a,b) => a.roi - b.roi).slice(0,5);
-      else if (view === 'active') filtered = campaigns.filter(c => c.status === 'active');
-      else if (view === 'completed') filtered = campaigns.filter(c => c.status === 'completed');
-
-      container.innerHTML = filtered.map(c => `
-        <div class="batch-row">
-          <div class="batch-info"><h4>${c.name} <span class="badge">${c.platform}</span></h4>
-            <p>influencer: ${c.influencer || 'none'} · ROI ${c.roi}%</p>
-            <small>${c.start} – ${c.end}</small></div>
-          <div class="batch-numbers"><span class="quantity">R ${c.revenue}</span><br><span class="badge">${c.status}</span></div>
-        </div>
-      `).join('');
-    }
-
-    // ---------- Chart Drawing (simple canvas) ----------
-    function drawPlatformChart() {
-      const canvas = document.getElementById('platformChart');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      const w = canvas.width, h = canvas.height;
-      const barWidth = w / platforms.length - 4;
-      const maxRev = Math.max(...platforms.map(p => p.revenue));
-      platforms.forEach((p,i) => {
-        const barH = (p.revenue / maxRev) * (h-20);
-        ctx.fillStyle = '#d4af37';
-        ctx.fillRect(i*(barWidth+4) + 4, h-barH-2, barWidth, barH);
-        ctx.fillStyle = '#aaa';
-        ctx.font = '8px Inter';
-        ctx.fillText(p.name.slice(0,3), i*(barWidth+4)+6, h-4);
-      });
-    }
-
-    function drawInfluencerChart() {
-      const canvas = document.getElementById('influencerChart');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      const w = canvas.width, h = canvas.height;
-      const barWidth = w / influencers.length - 4;
-      const maxRev = Math.max(...influencers.map(i => i.revenue));
-      influencers.forEach((i, idx) => {
-        const barH = (i.revenue / maxRev) * (h-20);
-        ctx.fillStyle = '#6b8e4c';
-        ctx.fillRect(idx*(barWidth+4) + 4, h-barH-2, barWidth, barH);
-        ctx.fillStyle = '#aaa';
-        ctx.font = '8px Inter';
-        ctx.fillText(i.name.split(' ')[0][0]+'.', idx*(barWidth+4)+8, h-4);
-      });
-    }
-
-    function drawTrendChart() {
-      const canvas = document.getElementById('trendChart');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      // mock ad spend vs revenue trend over last 6 weeks
-      const weeks = 6;
-      const spend = [800, 950, 1100, 1300, 1200, 1400];
-      const revenue = [2100, 2600, 3100, 3800, 3500, 4200];
-      const w = canvas.width, h = canvas.height;
-      const step = w / (weeks-1);
-      ctx.beginPath();
-      ctx.strokeStyle = '#d4af37';
-      ctx.lineWidth = 2;
-      spend.forEach((val,i) => {
-        const x = i * step;
-        const y = h - (val / 2000) * (h-20) - 10;
-        if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      });
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.strokeStyle = '#6b8e4c';
-      revenue.forEach((val,i) => {
-        const x = i * step;
-        const y = h - (val / 5000) * (h-20) - 10;
-        if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      });
-      ctx.stroke();
-    }
-
-    // ---------- UI Updates ----------
-    function updateOverview() {
-      const totalRevenue = platforms.reduce((a,p) => a + p.revenue, 0);
-      const totalSpend = platforms.reduce((a,p) => a + p.adSpend, 0);
-      const roi = totalSpend ? ((totalRevenue - totalSpend) / totalSpend * 100).toFixed(0) : 0;
-      document.getElementById('mktActiveCampaigns').innerText = campaigns.filter(c => c.status === 'active').length;
-      document.getElementById('mktTotalInfluencers').innerText = influencers.length;
-      document.getElementById('mktAdSpend').innerText = 'R ' + totalSpend;
-      document.getElementById('mktAttributedRev').innerText = 'R ' + totalRevenue;
-      document.getElementById('mktROI').innerText = roi + '%';
-      const conversions = platforms.reduce((a,p) => a + p.conversions, 0);
-      const clicks = platforms.reduce((a,p) => a + p.clicks, 0);
-      const cpa = conversions ? (totalSpend / conversions).toFixed(0) : 0;
-      document.getElementById('mktCPA').innerText = 'R ' + cpa;
-    }
-
-    // ---------- Event Listeners ----------
-    document.querySelectorAll('[data-campaign-view]').forEach(chip => {
-      chip.addEventListener('click', (e) => {
-        document.querySelectorAll('[data-campaign-view]').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        renderCampaigns(chip.dataset.campaignView);
-      });
-    });
-
-    document.getElementById('addInfluencerBtn')?.addEventListener('click', () => {
-      alert('Add influencer form (mock) – would open modal.');
-    });
-
-    document.getElementById('addLoopIdea')?.addEventListener('click', () => {
-      const input = document.getElementById('loopIdeaInput');
-      if (input.value.trim()) {
-        alert(`Idea "${input.value}" added to playbook.`);
-        input.value = '';
-      }
-    });
-
-    document.getElementById('applyAttribution')?.addEventListener('click', () => {
-      const platform = document.getElementById('attributionPlatform').value;
-      const start = document.getElementById('attributionStart').value;
-      const end = document.getElementById('attributionEnd').value;
-      // mock filter
-      let filteredRev = platforms.reduce((a,p) => a + p.revenue, 0);
-      if (platform !== 'all') {
-        const p = platforms.find(p => p.name.toLowerCase() === platform);
-        filteredRev = p ? p.revenue : 0;
-      }
-      document.getElementById('filteredRevenue').innerText = 'R ' + filteredRev;
-    });
-
-    // populate influencer dropdown
-    const infSelect = document.getElementById('attributionInfluencer');
-    if (infSelect) {
-      infSelect.innerHTML = '<option value="all">all influencers</option>' + influencers.map(i => `<option value="${i.name}">${i.name}</option>`).join('');
-    }
-    const campSelect = document.getElementById('attributionCampaign');
-    if (campSelect) {
-      campSelect.innerHTML = '<option value="all">all campaigns</option>' + campaigns.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-    }
-
-    // initial render
-    renderPlatforms();
-    renderInfluencers();
-    renderCampaigns('top5');
-    updateOverview();
-    drawPlatformChart();
-    drawInfluencerChart();
-    drawTrendChart();
-
-    // redraw charts on tab show (simple)
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((m) => {
-        if (m.target.classList.contains('active') && m.target.id === 'marketingPane') {
-          drawPlatformChart();
-          drawInfluencerChart();
-          drawTrendChart();
-        }
-      });
-    });
-    observer.observe(pane, { attributes: true, attributeFilter: ['class'] });
-  })();
+  });
 </script>
 </body>
 </html>
