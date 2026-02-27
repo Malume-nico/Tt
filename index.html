@@ -526,7 +526,7 @@
       gap: 8px;
     }
 
-    /* modal overlay (unchanged, but we removed the unused ones) */
+    /* modal overlay (unchanged) */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -567,7 +567,7 @@
     .chart-canvas { width: 100%; height: 80px; margin: 8px 0; }
     .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
 
-    /* ---------- ACCORDION STYLES ---------- */
+    /* ---------- ACCORDION STYLES (new) ---------- */
     .accordion-item {
       margin-bottom: 8px;
       border: 1px solid rgba(212, 175, 55, 0.25);
@@ -625,7 +625,7 @@
 </head>
 <body>
 <div id="app">
-  <!-- header with three‑dots panel (removed Village Expansion, Stock Sale, Marketing, Business Blueprint) -->
+  <!-- header with three‑dots panel (without removed pages) -->
   <div class="header">
     <div class="header-left">
       <h1>
@@ -649,7 +649,7 @@
     </div>
   </div>
 
-  <!-- main content area – all panes (removed villageExpansionPane, stockSalePane, marketingPane) -->
+  <!-- main content area – all panes (removed villageExpansion, stockSale, marketing) -->
   <div class="main-content" id="mainContent">
     <!-- DASHBOARD PANE (original full content) -->
     <div class="tab-pane active" id="dashboardPane">
@@ -1396,7 +1396,9 @@
         </div>
       </div>
     </div>
-    <!-- Removed: villageExpansionPane, stockSalePane, marketingPane -->
+
+    <!-- ========== (Removed Village Expansion, Stock Sale, Marketing Command Center) ========== -->
+
   </div>
 
   <!-- bottom navigation (unchanged) -->
@@ -1408,12 +1410,45 @@
     <div class="nav-item" data-tab="budget"><i class="fas fa-chart-line"></i><span>Budget</span></div>
   </div>
 
-  <!-- Removed: contractModal and campaignModal -->
+  <!-- Modals (original) -->
+  <div class="modal-overlay" id="contractModal">
+    <div class="modal-card">
+      <h3 id="modalTitle">➕ new village contract</h3>
+      <div class="cost-input"><label>farm name</label> <input type="text" id="modalFarmName" placeholder="e.g. Mvula Poultry"></div>
+      <div class="cost-input"><label>village</label> <input type="text" id="modalVillage" placeholder="e.g. Lwandle"></div>
+      <div class="cost-input"><label>🐔 chickens/month</label> <input type="number" id="modalChickens" value="500" step="10"></div>
+      <div class="cost-input"><label>💰 our margin %</label> <input type="number" id="modalMargin" value="12" step="0.5" min="0" max="100"></div>
+      <div class="cost-input"><label>📅 start date</label> <input type="date" id="modalStart" value="2025-05-01"></div>
+      <div class="cost-input"><label>📅 end date</label> <input type="date" id="modalEnd" value="2025-10-31"></div>
+      <div class="cost-input"><label>📝 admin notes</label> <input type="text" id="modalNotes" placeholder="negotiation notes"></div>
+      <div class="cost-input"><label>🔗 generate sign link?</label> <input type="checkbox" id="modalGenerateLink" checked></div>
+      <div id="modalSignaturePreview" class="signature-link" style="display:none;">farm.goldenfeather.com/sign/xyz</div>
+      <div class="flex-row" style="justify-content:flex-end;">
+        <button class="btn-small" id="modalCancel">cancel</button>
+        <button class="btn-gold" id="modalSave">save contract</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-overlay" id="campaignModal">
+    <div class="modal-card">
+      <h3 id="campaignModalTitle">➕ new campaign</h3>
+      <div class="cost-input"><label>campaign name</label> <input type="text" id="campaignName" placeholder="e.g. Easter Special"></div>
+      <div class="cost-input"><label>channel</label> <select id="campaignChannel"><option>Facebook</option><option>Instagram</option><option>Email</option><option>Event</option></select></div>
+      <div class="cost-input"><label>budget (R)</label> <input type="number" id="campaignBudget" value="2000" step="100"></div>
+      <div class="cost-input"><label>start date</label> <input type="date" id="campaignStart" value="2025-04-01"></div>
+      <div class="cost-input"><label>end date</label> <input type="date" id="campaignEnd" value="2025-04-30"></div>
+      <div class="cost-input"><label>target segment</label> <select id="campaignSegment"><option>wholesale</option><option>retail</option><option>restaurant</option><option>subscriber</option></select></div>
+      <div class="flex-row" style="justify-content:flex-end;">
+        <button class="btn-small" id="campaignModalCancel">cancel</button>
+        <button class="btn-gold" id="campaignModalSave">save campaign</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- ALL ORIGINAL SCRIPTS (modified: removed panes and modules for removed pages) -->
+<!-- ALL ORIGINAL SCRIPTS (unchanged) except removed modules for Village, Stock, Marketing -->
 <script>
-  // ----- tab switching (updated: removed villageExpansion, stockSale, marketing) -----
+  // ----- tab switching (updated without removed panes) -----
   (function() {
     const navItems = document.querySelectorAll('.nav-item');
     const panes = {
@@ -1429,7 +1464,7 @@
       festive: document.getElementById('festivePane'),
       subscription: document.getElementById('subscriptionPane'),
       assurance: document.getElementById('assurancePane')
-      // removed: villageExpansion, stockSale, marketing
+      // Removed: villageExpansion, stockSale, marketing
     };
 
     function setActiveTab(tabId) {
@@ -1458,7 +1493,7 @@
 
     document.querySelectorAll('.more-item').forEach(item => {
       item.addEventListener('click', (e) => {
-        // No data-href items remain; all are tab switches.
+        // Removed data-href navigation (Business Blueprint item is gone)
         const tabId = item.dataset.tab;
         setActiveTab(tabId);
       });
@@ -2370,7 +2405,7 @@
     updateAssuranceUI();
   })();
 
-  // Removed: VILLAGE EXPANSION MODULE, STOCK SALE MODULE, MARKETING COMMAND CENTER MODULE
+  // ========== (Removed Village Expansion, Stock Sale, Marketing Command Center modules) ==========
 
   // ========== GLOBAL ACCORDION TOGGLE ==========
   document.addEventListener('click', function(e) {
