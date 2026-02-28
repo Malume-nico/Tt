@@ -119,7 +119,7 @@
       font-size: 0.65rem;
     }
 
-    /* ---------- NEW FARM SELECTOR ---------- */
+    /* ---------- FARM SELECTOR ---------- */
     .farm-selector {
       margin-top: 6px;
       width: 100%;
@@ -692,7 +692,7 @@
         <i class="fas fa-seedling" style="color:#4e7f5a;"></i> quality from growth to table
         <span><i class="far fa-star"></i> ethically raised</span>
       </div>
-      <!-- NEW FARM SELECTOR -->
+      <!-- FARM SELECTOR -->
       <div class="farm-selector">
         <select id="farmSelector" class="farm-dropdown">
           <option value="all">🌍 All Farms (Enterprise)</option>
@@ -720,17 +720,11 @@
     </div>
   </div>
 
-  <!-- main content area – all panes (including marketingPane) -->
+  <!-- main content area – all panes -->
   <div class="main-content" id="mainContent">
-    <!-- DASHBOARD PANE (original full content + new enterprise card at top) -->
+    <!-- DASHBOARD PANE (original full content, enterprise summary removed) -->
     <div class="tab-pane active" id="dashboardPane">
-      <!-- NEW ENTERPRISE OVERVIEW CARD (collapsible sections) -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-sitemap gold-text"></i> enterprise command center</div>
-        <div id="enterpriseOverviewContainer" class="accordion-container">
-          <!-- dynamically filled by JavaScript -->
-        </div>
-      </div>
+      <!-- ENTERPRISE OVERVIEW CARD (REMOVED) -->
 
       <div class="card">
         <div class="card-title"><i class="fas fa-eye gold-text"></i> live overview</div>
@@ -1737,7 +1731,7 @@
   </div>
 </div>
 
-<!-- ALL ORIGINAL SCRIPTS (unchanged) – we keep every line exactly as in the provided original -->
+<!-- ALL ORIGINAL SCRIPTS (unchanged, except enterprise block removed) -->
 <script>
   // ----- tab switching (updated with 'marketing' and support for data-href) -----
   (function() {
@@ -3392,157 +3386,116 @@
 <!-- ========== NEW MULTI‑FARM ENTERPRISE LOGIC ========== -->
 <script>
   (function() {
-    // ----- Farm data from the prompt -----
-    const farms = [
-      { id: 'delta', name: 'Delta Farm', revenue: 382500, profit: 102300, budget: 45920 },
-      { id: 'rana', name: 'Golden Feather (Rana)', revenue: 324480, profit: 86400, budget: 39560 },
-      { id: 'gamma', name: 'Gamma Feather Farm', revenue: 450200, profit: 128400, budget: 58360 },
-      { id: 'rustic', name: 'The Rustic Hen', revenue: 399500, profit: 112400, budget: 48960 },
-      { id: 'alpha', name: 'Golden Feather (alpha)', revenue: 430560, profit: 118800, budget: 54520 }
-    ];
-
-    const totalRevenue = 1987240;
-    const totalProfit = 548300;
-    const totalExpenses = 1438940;
-
-    // Totals for other categories
-    const totals = {
-      subscriptions: { members: 90, revenue: 81876, deliveries: 762, outstanding: 46675, forecast: 93900 },
-      rewards: { claimed: 45, active: 64, upcoming: 29, referralCredits: 8910, byproductUptake: 19 },
-      inventory: { totalBirds: 15170, soldToday: 754, lostToday: 58, monthlySold: 22620, byproductRevenue: 77550 },
-      assurance: { members: 72, contributions: 39900, pendingClaims: 15, loyaltyCredits: 8210, expectedClaims: 56720, allocations: 1407 },
-      community: { villages: 27, participants: 987, chickensRequired: 12700, contributions: 468300 },
-      longterm: { emergencyFund: 87000, totalGoals: 2935000, monthlyRequirement: 234417, profitAfterGoals: 324983 }
+    // ----- Centralized data object (enterprise totals & per‑farm) -----
+    const data = {
+      enterprise: {
+        revenue: 1987240,
+        profit: 548300,
+        totalBirds: 15170,
+        // other totals (not used in dashboard cards but kept for completeness)
+        subscriptions: 90,
+        rewardsClaimed: 45,
+        assuranceMembers: 72,
+        communityParticipants: 987,
+        longTermGoals: 2935000
+      },
+      farms: {
+        delta: { revenue: 382500, profit: 102300, totalBirds: 3100 },
+        rana: { revenue: 324480, profit: 86400, totalBirds: 2450 },
+        gamma: { revenue: 450200, profit: 128400, totalBirds: 3700 },
+        rustic: { revenue: 399500, profit: 112400, totalBirds: 3300 },
+        alpha: { revenue: 430560, profit: 118800, totalBirds: 3520 }
+      }
     };
 
-    // Helper to get revenue share percentages
-    const totalRev = farms.reduce((sum, f) => sum + f.revenue, 0);
-    farms.forEach(f => f.revenueShare = f.revenue / totalRev);
+    // ----- View state -----
+    let currentView = 'all'; // 'all' or farm id
 
-    // Build per‑farm breakdown for categories where we only have totals (using revenue share)
-    function getPerFarmValue(total) {
-      return farms.map(f => ({ farmId: f.id, farmName: f.name, value: total * f.revenueShare }));
+    // ----- Helper to format currency -----
+    function formatR(val) {
+      return 'R ' + val.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
-    // Prepare per‑farm data for each category
-    const perFarm = {
-      revenue: farms.map(f => ({ farmId: f.id, farmName: f.name, value: f.revenue })),
-      profit: farms.map(f => ({ farmId: f.id, farmName: f.name, value: f.profit })),
-      budget: farms.map(f => ({ farmId: f.id, farmName: f.name, value: f.budget })),
-      subscriptions: getPerFarmValue(totals.subscriptions.revenue),
-      rewardsClaimed: getPerFarmValue(totals.rewards.claimed),
-      inventoryBirds: getPerFarmValue(totals.inventory.totalBirds),
-      assuranceMembers: getPerFarmValue(totals.assurance.members),
-      communityParticipants: getPerFarmValue(totals.community.participants),
-      longtermGoals: getPerFarmValue(totals.longterm.totalGoals)
-    };
+    // ----- Update function (updates only the core dashboard cards) -----
+    function updateDashboard() {
+      let rev, profit, birds;
+      if (currentView === 'all') {
+        rev = data.enterprise.revenue;
+        profit = data.enterprise.profit;
+        birds = data.enterprise.totalBirds;
+      } else {
+        const farmData = data.farms[currentView];
+        if (farmData) {
+          rev = farmData.revenue;
+          profit = farmData.profit;
+          birds = farmData.totalBirds;
+        } else {
+          // fallback to enterprise if farm not found
+          rev = data.enterprise.revenue;
+          profit = data.enterprise.profit;
+          birds = data.enterprise.totalBirds;
+        }
+      }
 
-    // Helper to format currency
-    const formatR = (val) => 'R ' + val.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      // Update the three core metric cards (using their original IDs)
+      const revEl = document.getElementById('monthlyRevenueDisplay');
+      if (revEl) revEl.innerText = formatR(rev);
 
-    // Helper to find best and worst from perFarm array
-    function getBestWorst(arr, metricName = 'value') {
-      if (arr.length === 0) return { best: null, worst: null };
-      const sorted = [...arr].sort((a,b) => b.value - a.value);
-      const best = sorted[0];
-      const worst = sorted[sorted.length-1];
-      return { best, worst };
+      const profitEl = document.getElementById('netMonthly');
+      if (profitEl) profitEl.innerText = formatR(profit);
+
+      const profitMonthEl = document.getElementById('netProfitMonthDisplay');
+      if (profitMonthEl) profitMonthEl.innerText = formatR(profit);
+
+      const birdsEl = document.getElementById('totalBirdsDisplay');
+      if (birdsEl) birdsEl.innerText = birds.toLocaleString();
+
+      // Also update totalRevenue in sales pane for consistency (optional)
+      const totalRevEl = document.getElementById('totalRevenue');
+      if (totalRevEl) totalRevEl.innerText = formatR(rev);
+
+      // Update profit per chicken (rough estimate, using birds as monthly sold? we'll use profit/birds)
+      const profitPerChickenEl = document.getElementById('profitPerChicken');
+      if (profitPerChickenEl && birds > 0) {
+        const perChicken = profit / birds; // approximate (profit per bird for the month)
+        profitPerChickenEl.innerText = 'R ' + perChicken.toFixed(2);
+      }
+
+      // Update projected profit (3x monthly profit)
+      const projProfitEl = document.getElementById('projectedProfit');
+      if (projProfitEl) projProfitEl.innerText = formatR(profit * 3);
+
+      // Optionally update KPI active birds (same as total birds)
+      const activeBirdsEl = document.getElementById('kpiActiveBirds');
+      if (activeBirdsEl) activeBirdsEl.innerText = birds.toLocaleString();
+
+      // (We do not touch other panes to preserve existing interactions)
     }
 
-    // Generate HTML for a collapsible section
-    function createAccordionItem(title, totalValue, perFarmArray, valueFormatter = formatR, unit = '') {
-      const { best, worst } = getBestWorst(perFarmArray);
-      let rows = '';
-      perFarmArray.sort((a,b) => b.value - a.value).forEach(f => {
-        const percent = (f.value / totalValue * 100).toFixed(1);
-        rows += `
-          <div class="farm-contrib">
-            <span class="farm-name">${f.farmName}</span>
-            <div class="mini-bar"><div class="mini-fill" style="width:${percent}%"></div></div>
-            <span class="value">${valueFormatter(f.value)}${unit}</span>
-          </div>
-        `;
-      });
-      const bestWorstHtml = best && worst ? `
-        <div class="flex-row" style="margin-top:8px; font-size:0.8rem;">
-          <span class="badge" style="background:#6b8e4c;">🏆 best: ${best.farmName} (${valueFormatter(best.value)})</span>
-          <span class="badge alert-badge">⚠️ lowest: ${worst.farmName} (${valueFormatter(worst.value)})</span>
-        </div>
-        <p class="helper-text" style="margin-top:6px;">🔧 adjustment: ${worst.farmName} needs +${((best.value/worst.value-1)*100).toFixed(0)}% to match leader</p>
-      ` : '';
-      return `
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <div class="accordion-summary">
-              <span><strong>${title}</strong></span>
-              <span>${valueFormatter(totalValue)}${unit}</span>
-              <span class="badge">${perFarmArray.length} farms</span>
-            </div>
-            <i class="fas fa-chevron-right arrow"></i>
-          </div>
-          <div class="accordion-body">
-            ${rows}
-            ${bestWorstHtml}
-          </div>
-        </div>
-      `;
-    }
-
-    // Build the enterprise overview container
-    function buildEnterpriseOverview() {
-      let html = '';
-      // Core Financials
-      html += createAccordionItem('💰 Core Financials', totalRevenue, perFarm.revenue);
-      html += createAccordionItem('📈 Profit', totalProfit, perFarm.profit);
-      html += createAccordionItem('💸 Budget Allocations', totals.subscriptions.revenue, perFarm.budget); // using budget per farm
-      // Subscriptions
-      html += createAccordionItem('📦 Subscriptions (monthly rev)', totals.subscriptions.revenue, perFarm.subscriptions);
-      // Rewards
-      html += createAccordionItem('🎁 Rewards Claimed', totals.rewards.claimed, perFarm.rewardsClaimed, (v) => v.toFixed(0), ' claims');
-      // Inventory
-      html += createAccordionItem('🐔 Total Birds', totals.inventory.totalBirds, perFarm.inventoryBirds, (v) => v.toFixed(0), ' birds');
-      // Assurance
-      html += createAccordionItem('🛡️ Assurance Members', totals.assurance.members, perFarm.assuranceMembers, (v) => v.toFixed(0), ' members');
-      // Community
-      html += createAccordionItem('👥 Community Participants', totals.community.participants, perFarm.communityParticipants, (v) => v.toFixed(0), ' people');
-      // Long‑Term
-      html += createAccordionItem('🏛️ Long‑Term Goals', totals.longterm.totalGoals, perFarm.longtermGoals);
-      document.getElementById('enterpriseOverviewContainer').innerHTML = html;
-    }
-
-    buildEnterpriseOverview();
-
-    // ----- Farm selector redirect -----
+    // ----- Attach farm selector listener -----
     const farmSelect = document.getElementById('farmSelector');
     if (farmSelect) {
       farmSelect.addEventListener('change', function(e) {
-        const val = e.target.value;
-        if (val === 'all') {
-          window.location.href = 'index.html'; // stay here
-        } else {
-          const pages = {
-            delta: 'dashboard-delta.html',
-            rana: 'dashboard-beta.html',      // assuming beta is Rana
-            gamma: 'dashboard-gamma.html',
-            rustic: 'dashboard.html',          // The Rustic Hen
-            alpha: 'dashboard-alpha.html'
-          };
-          window.location.href = pages[val];
-        }
+        currentView = e.target.value;
+        updateDashboard();
       });
     }
 
-    // Update some original totals with enterprise numbers (optional, to make them match)
-    // But we keep the original script's numbers; they are placeholders anyway.
-    // For consistency, we'll update the monthly revenue and net profit in the dashboard pane.
-    document.getElementById('monthlyRevenueDisplay').innerText = formatR(totalRevenue);
-    document.getElementById('netMonthly').innerText = formatR(totalProfit);
-    document.getElementById('netProfitMonthDisplay').innerText = formatR(totalProfit);
-    document.getElementById('totalRevenue').innerText = formatR(totalRevenue);
-    // Also update other aggregated fields where possible
-    if (document.getElementById('subTotalMembers')) document.getElementById('subTotalMembers').innerText = totals.subscriptions.members;
-    if (document.getElementById('subMonthlyRev')) document.getElementById('subMonthlyRev').innerText = formatR(totals.subscriptions.revenue);
-    // etc. (could add more, but not required for functionality)
+    // Initial update (enterprise totals)
+    updateDashboard();
+
+    // Optional: also update when original dashboard scripts recalc (to keep our values)
+    // We'll hook into the existing updateAll function by wrapping it,
+    // but to avoid complexity we simply call updateDashboard after a short delay
+    // to override any changes made by original scripts.
+    // This ensures our values stay on top when view is not 'all'.
+    setInterval(function() {
+      // Only override if currentView is not 'all'? Actually we want our values always.
+      // But the original scripts may recalc based on user input – we want to keep our override.
+      // So we call updateDashboard periodically (every 500ms) to re-apply our values.
+      // This is a simple way to maintain the override without modifying original code.
+      updateDashboard();
+    }, 500);
   })();
 </script>
 </body>
